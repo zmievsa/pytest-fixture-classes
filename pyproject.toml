@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "any_python_template"
+version = "0.1.0"
+description = ""
+authors = ["Stanislav Zmiev <szmiev2000@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+[tool.poetry.dev-dependencies]
+pyupgrade = "^2.37.3"
+black = "^22.8.0"
+autoflake = "^1.5.3"
+pytest = "^7.1.3"
+pytest-cov = "^3.0.0"
+isort = "^5.10.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
