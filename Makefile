@@ -15,7 +15,7 @@ py_warn = PYTHONDEVMODE=1
 # 'shopt -s globstar' allows us to run **/*.py globs. By default bash can't do recursive globs 
 format:
 	shopt -s globstar; \
-	poetry run pyupgrade **/*.py --py38-plus --exit-zero-even-if-changed; \
+	poetry run pyupgrade **/*.py --py37-plus --exit-zero-even-if-changed; \
 	poetry run autoflake . --in-place --recursive --remove-all-unused-imports --ignore-init-module-imports --verbose; \
 	poetry run isort .; \
 	poetry run black .;
