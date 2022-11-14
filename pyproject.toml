@@ -13,9 +13,9 @@ classifiers = [
     "Environment :: Console",
     "Framework :: Pytest",
     "Intended Audience :: Developers",
-    "OPERATING SYSTEM :: UNIX",
-    "OPERATING SYSTEM :: POSIX",
-    "OPERATING SYSTEM :: MICROSOFT :: WINDOWS",
+    "Operating System :: Unix",
+    "Operating System :: POSIX",
+    "Operating System :: Microsoft :: Windows",
     "Topic :: Utilities",
     "Topic :: Software Development :: Testing",
 ]
