@@ -4,10 +4,6 @@ Give you the ability to write typed fixture classes that work well with dependen
 
 No mypy plugins required!
 
-## Warning
-
-This library is work in progress until version 1.0.0 so problems could occur on python versions less than 3.10. However, all problems will be simple exceptions happening at pytest startup so they won't secretly mess any of your tests up.
-
 ## Installation
 
 `pip install pytest-fixture-classes`

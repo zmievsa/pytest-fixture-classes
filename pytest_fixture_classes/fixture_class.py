@@ -50,17 +50,19 @@ def fixture_class(
 ) -> Union[T, Callable[[T], T]]:
     def inner(fixture_cls):
         kwargs = {"slots": True} if sys.version_info >= (3, 10) else {}
-        fixture_cls = dataclass(frozen=True, repr=False, eq=False, **kwargs)(fixture_cls)
-        args = list(inspect.signature(fixture_cls.__init__).parameters)[1:]
+        fixture_dataclass = dataclass(frozen=True, repr=False, eq=False, **kwargs)(fixture_cls)
+        args = list(inspect.signature(fixture_dataclass.__init__).parameters)[1:]
         func_def = dedent(
             f"""
-            def {fixture_cls.__name__}({', '.join(args)}):
+            def {fixture_dataclass.__name__}({', '.join(args)}):
                 return fixture_cls({', '.join(args)})
         """
         )
-        namespace = {"fixture_cls": fixture_cls}
+        namespace = {"fixture_cls": fixture_dataclass}
         exec(func_def, namespace)
-        func = namespace[fixture_cls.__name__]
+        func = namespace[fixture_dataclass.__name__]
+        func.__module__ = fixture_cls.__module__
+        func.__doc__ = fixture_cls.__doc__ or fixture_dataclass.__doc__
         return pytest.fixture(scope=scope, params=params, autouse=autouse, ids=ids, name=name)(func)
 
     return inner if fixture_cls is None else inner(fixture_cls)
