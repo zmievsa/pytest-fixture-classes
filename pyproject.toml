@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pytest-fixture-classes"
-version = "1.0.0"
+version = "1.0.1"
 description = "Fixtures as classes that work well with dependency injection, autocompletetion, type checkers, and language servers"
 authors = ["Stanislav Zmiev <szmiev2000@gmail.com>"]
 readme = "README.md"
@@ -21,9 +21,9 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = ">=3.7"
 pytest = "*"
-typing-extensions = "^4.4.0"
+typing-extensions = ">=4.4.0"
 
 
 [tool.poetry.group.dev.dependencies]
