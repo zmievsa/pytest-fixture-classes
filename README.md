@@ -1,6 +1,6 @@
 # Pytest Fixture Classes
 
-Give you the ability to write typed fixture classes that work well with dependency injection, autocompletetion, type checkers, and language servers.
+Typed [factory fixtures](https://docs.pytest.org/en/6.2.x/fixture.html#factories-as-fixtures) that work well with dependency injection, autocompletetion, type checkers, and language servers.
 
 No mypy plugins required!
 
@@ -12,34 +12,60 @@ No mypy plugins required!
 
 ### Quickstart
 
-This is a quick and simple example of writing a very simplistic fixture class. You can, of course, add any methods you like into the class but I prefer to keep it a simple callable.
+Here's a factory fixture from [pytest's documentation](https://docs.pytest.org/en/6.2.x/fixture.html#factories-as-fixtures):
+
+```python
+from typing import Any
+import pytest
+
+
+@pytest.fixture()
+def orders() -> list[str]:
+    return ["order1", "order2"]
+
+
+@pytest.fixture
+def make_customer_record(orders: list[str]) -> Callable[str, dict[str, Any]]:
+    def _make_customer_record(name):
+        return {"name": name, "orders": orders}
+
+    return _make_customer_record
+
+
+def test_customer_records(make_customer_record: Callable[str, dict[str, Any]]):
+    customer_1 = make_customer_record("Lisa")
+    customer_2 = make_customer_record("Mike")
+    customer_3 = make_customer_record("Meredith")
+```
+
+And here's the same factory implemented using fixture classes:
 
 ```python
 from pytest_fixture_classes import fixture_class
-from collections.abc import Mapping
-import requests
+from typing import Any
+import pytest
 
 
-# changing the name is optional and is a question of style. Everything will work correctly with the default name
-@fixture_class(name="my_fixture_class")
-class MyFixtureClass:
-    existing_fixture1: Mapping[str, str]
-    existing_fixture2: requests.Session
-    existing_fixture3: Mapping[str, str | int | bool]
-
-    def __call__(self, name: str, age: int, height: int) -> dict[str, str | int | bool]:
-        ...
+@pytest.fixture()
+def orders():
+    return ["order1", "order2"]
 
 
-def test_my_code(my_fixture_class: MyFixtureClass):
-    some_value = my_fixture_class(...)
-    some_other_value = my_fixture_class(...)
-    one_more_value = my_fixture_class(...)
+@fixture_class(name="make_customer_record")
+class MakeCustomerRecord:
+    orders: list[str]
 
-    # Some testing code below
-    ...
+    def __call__(self, name: str) -> dict[str, Any]:
+        return return {"name": name, "orders": orders}
 
+
+def test_customer_records(make_customer_record: MakeCustomerRecord):
+    customer_1 = make_customer_record("Lisa")
+    customer_2 = make_customer_record("Mike")
+    customer_3 = make_customer_record("Meredith")
 ```
+
+You can, of course, add any methods you like into the class but I prefer to keep it a simple callable.
 
 ### Rationale
 
