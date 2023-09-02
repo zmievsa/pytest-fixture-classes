@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "pytest-fixture-classes"
-version = "1.0.1"
+version = "1.0.2"
 description = "Fixtures as classes that work well with dependency injection, autocompletetion, type checkers, and language servers"
-authors = ["Stanislav Zmiev <szmiev2000@gmail.com>"]
+authors = ["Stanislav Zmiev <zmievsa@gmail.com>"]
 readme = "README.md"
 license = "MIT"
 keywords = ["pytest", "py.test", "type hints", "annotations", "fixtures"]
