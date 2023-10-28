@@ -6,8 +6,8 @@ authors = ["Stanislav Zmiev <zmievsa@gmail.com>"]
 readme = "README.md"
 license = "MIT"
 keywords = ["pytest", "py.test", "type hints", "annotations", "fixtures", "factory fixtures"]
-documentation = "https://github.com/Ovsyanka83/pytest-fixture-classes"
-repository = "https://github.com/Ovsyanka83/pytest-fixture-classes"
+documentation = "https://github.com/zmievsa/pytest-fixture-classes"
+repository = "https://github.com/zmievsa/pytest-fixture-classes"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
