@@ -1,4 +1,6 @@
-from .test_fixture_class import Fixture2, Fixture3
+pytest_plugins = ["tests.test_fixture_class"]
+
+from .test_fixture_class import Fixture3
 
 
 def test_another_file(fixture1, fixture3: Fixture3):

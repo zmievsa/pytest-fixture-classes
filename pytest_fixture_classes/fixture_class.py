@@ -19,10 +19,11 @@ def fixture_class(
     scope: "Union[_ScopeName, Callable[[str, pytest.Config], _ScopeName]]" = ...,
     params: Optional[Iterable[object]] = ...,
     autouse: bool = ...,
-    ids: Optional[Union[Sequence[Optional[object]], Callable[[Any], Optional[object]]]] = ...,
+    ids: Optional[
+        Union[Sequence[Optional[object]], Callable[[Any], Optional[object]]]
+    ] = ...,
     name: Optional[str] = ...,
-) -> T:
-    ...
+) -> T: ...
 
 
 @overload
@@ -32,10 +33,11 @@ def fixture_class(
     scope: "Union[_ScopeName, Callable[[str, pytest.Config], _ScopeName]]" = ...,
     params: Optional[Iterable[object]] = ...,
     autouse: bool = ...,
-    ids: Optional[Union[Sequence[Optional[object]], Callable[[Any], Optional[object]]]] = ...,
+    ids: Optional[
+        Union[Sequence[Optional[object]], Callable[[Any], Optional[object]]]
+    ] = ...,
     name: Optional[str] = None,
-) -> Callable[[T], T]:
-    ...
+) -> Callable[[T], T]: ...
 
 
 @dataclass_transform(eq_default=False, order_default=False, kw_only_default=False)
@@ -45,12 +47,16 @@ def fixture_class(
     scope: "Union[_ScopeName, Callable[[str, pytest.Config], _ScopeName]]" = "function",
     params: Optional[Iterable[object]] = None,
     autouse: bool = False,
-    ids: Optional[Union[Sequence[Optional[object]], Callable[[Any], Optional[object]]]] = None,
+    ids: Optional[
+        Union[Sequence[Optional[object]], Callable[[Any], Optional[object]]]
+    ] = None,
     name: Optional[str] = None,
 ) -> Union[T, Callable[[T], T]]:
     def inner(fixture_cls):
         kwargs = {"slots": True} if sys.version_info >= (3, 10) else {}
-        fixture_dataclass = dataclass(frozen=True, repr=False, eq=False, **kwargs)(fixture_cls)
+        fixture_dataclass = dataclass(frozen=True, repr=False, eq=False, **kwargs)(
+            fixture_cls
+        )
         args = list(inspect.signature(fixture_dataclass.__init__).parameters)[1:]
         func_def = dedent(
             f"""
@@ -63,6 +69,8 @@ def fixture_class(
         func = namespace[fixture_dataclass.__name__]
         func.__module__ = fixture_cls.__module__
         func.__doc__ = fixture_cls.__doc__ or fixture_dataclass.__doc__
-        return pytest.fixture(scope=scope, params=params, autouse=autouse, ids=ids, name=name)(func)
+        return pytest.fixture(
+            scope=scope, params=params, autouse=autouse, ids=ids, name=name
+        )(func)
 
     return inner if fixture_cls is None else inner(fixture_cls)

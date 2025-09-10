@@ -19,7 +19,9 @@ class Fixture3:
         return self.fixture2()
 
 
-def test_simple_fixture_usage(fixture3: Fixture3, fixture2: Fixture2, fixture1: int) -> None:
+def test_simple_fixture_usage(
+    fixture3: Fixture3, fixture2: Fixture2, fixture1: int
+) -> None:
     assert fixture3() == fixture1 == 83
 
 

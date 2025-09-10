@@ -1,0 +1,26 @@
+name: Release PYPI Package
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  Publish:
+    name: Build & Publish distribution 📦 to PyPI 🐍
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    environment:
+      name: pypi
+      url: https://pypi.org/p/pytest-fixture-classes
+    if: startsWith(github.ref, 'refs/tags/') # only publish to PyPI on tag pushes
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: astral-sh/setup-uv@v1
+      - run: uv build
+      - run: uv publish
