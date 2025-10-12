@@ -178,6 +178,12 @@ def test_my_code(create_user: CreateUser):
     ...
 ```
 
+### Async Support
+
+Fixture classes fully support async `__call__` methods. Simply define `__call__` as `async def` and use `await` when calling the fixture:
+
+Note: Async fixtures require `pytest-asyncio` or another async pytest plugin to be installed.
+
 ## Implementation details
 
 * The fixture_class decorator turns your class into a frozen dataclass with slots so you won't be able to add new attributes to it after definiton. You can, however, define any methods you like except `__init__`.
