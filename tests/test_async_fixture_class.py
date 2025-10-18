@@ -1,4 +1,5 @@
 import asyncio
+
 import pytest
 
 from pytest_fixture_classes import fixture_class
@@ -11,7 +12,6 @@ def sync_fixture() -> int:
 
 @fixture_class(name="async_factory")
 class AsyncFactory:
-    """Async factory fixture"""
     sync_fixture: int
 
     async def __call__(self, multiplier: int) -> int:
@@ -43,5 +43,7 @@ async def test_nested_async_factory(nested_async_factory: NestedAsyncFactory) ->
 
 
 @pytest.mark.asyncio
-async def test_async_factory_docstring_preservation(async_factory: AsyncFactory) -> None:
+async def test_async_factory_docstring_preservation(
+    async_factory: AsyncFactory,
+) -> None:
     assert async_factory.__doc__ == "Async factory fixture"

@@ -184,6 +184,88 @@ Fixture classes fully support async `__call__` methods. Simply define `__call__`
 
 Note: Async fixtures require `pytest-asyncio` or another async pytest plugin to be installed.
 
+### Lifespan Support
+
+Fixture classes support lifespan methods for setup and teardown logic, similar to pytest's built-in fixture teardown. This is useful when your factory needs to perform initialization before it can be used and cleanup after the test completes.
+
+#### Synchronous Lifespan
+
+Define a `lifespan` method that returns a `Generator` to add setup and teardown logic to your fixture class:
+
+```python
+from pytest_fixture_classes import fixture_class
+from collections.abc import Generator
+import pytest
+
+@pytest.fixture
+def database_url() -> str:
+    return "sqlite:///test.db"
+
+@fixture_class(name="user_factory")
+class UserFactory:
+    database_url: str
+
+    def lifespan(self) -> Generator:
+        # Setup: runs when the fixture is first created
+        print(f"Connecting to {self.database_url}")
+        self.connection = create_connection(self.database_url)
+
+        yield  # Test runs here
+
+        # Teardown: runs after the test completes
+        print("Closing database connection")
+        self.connection.close()
+
+    def __call__(self, name: str, email: str) -> User:
+        return User.create(self.connection, name=name, email=email)
+
+def test_users(user_factory: UserFactory):
+    user1 = user_factory("Alice", "alice@example.com")
+    user2 = user_factory("Bob", "bob@example.com")
+    # Connection will be closed after this test completes
+```
+
+#### Asynchronous Lifespan
+
+For async fixture classes, define an `async def lifespan` method that returns an `AsyncGenerator`:
+
+```python
+from pytest_fixture_classes import fixture_class
+from collections.abc import AsyncGenerator
+import pytest_asyncio
+import pytest
+
+@pytest_asyncio.fixture
+async def async_database_url() -> str:
+    return "sqlite:///test.db"
+
+@fixture_class(name="async_user_factory")
+class AsyncUserFactory:
+    async_database_url: str
+
+    async def lifespan(self) -> AsyncGenerator:
+        # Async setup
+        print(f"Connecting to {self.async_database_url}")
+        self.connection = await create_async_connection(self.async_database_url)
+
+        yield  # Test runs here
+
+        # Async teardown
+        print("Closing async database connection")
+        await self.connection.close()
+
+    async def __call__(self, name: str, email: str) -> User:
+        return await User.create(self.connection, name=name, email=email)
+
+@pytest.mark.asyncio
+async def test_async_users(async_user_factory: AsyncUserFactory):
+    user1 = await async_user_factory("Alice", "alice@example.com")
+    user2 = await async_user_factory("Bob", "bob@example.com")
+    # Connection will be closed after this test completes
+```
+
+The lifespan method is optional. If you don't need setup/teardown logic, you can omit it entirely.
+
 ## Implementation details
 
 * The fixture_class decorator turns your class into a frozen dataclass with slots so you won't be able to add new attributes to it after definiton. You can, however, define any methods you like except `__init__`.
