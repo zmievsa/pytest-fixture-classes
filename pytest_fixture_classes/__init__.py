@@ -3,8 +3,8 @@ try:
 except ImportError:
     import importlib_metadata
 
-from .fixture_class import fixture_class
+from .fixture_class import fixture_class, yield_fixture
 
 __version__ = importlib_metadata.version("pytest-fixture-classes")
 
-__all__ = ["fixture_class", "__version__"]
+__all__ = ["fixture_class", "yield_fixture", "__version__"]
