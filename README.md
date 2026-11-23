@@ -113,7 +113,6 @@ async def create_user(
         self.db_connection.execute(...)
         if self.current_user[...] is not None:
             self.http_session.post(...)
-
         return user
 
     return inner
@@ -165,7 +164,6 @@ class CreateUser:
         self.db_connection.execute(...)
         if self.current_user[...] is not None:
             self.http_session.post(...)
-
         return user
 
 
