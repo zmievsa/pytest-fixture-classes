@@ -113,7 +113,6 @@ async def create_user(
         self.db_connection.execute(...)
         if self.current_user[...] is not None:
             self.http_session.post(...)
-        
         return user
 
     return inner
@@ -165,7 +164,6 @@ class CreateUser:
         self.db_connection.execute(...)
         if self.current_user[...] is not None:
             self.http_session.post(...)
-        
         return user
 
 
@@ -183,6 +181,38 @@ def test_my_code(create_user: CreateUser):
 Fixture classes fully support async `__call__` methods. Simply define `__call__` as `async def` and use `await` when calling the fixture:
 
 Note: Async fixtures require `pytest-asyncio` or another async pytest plugin to be installed.
+
+### Generator Support
+
+Yield exactly one value from `__call__` and put teardown code after `yield`.
+Add `@yield_fixture` so mypy and pyright infer the yielded value as the call's return type:
+
+```python
+from sqlite3 import Connection, connect
+from typing import Generator
+
+from pytest_fixture_classes import fixture_class, yield_fixture
+
+
+@fixture_class(name="make_connection")
+class MakeConnection:
+    @yield_fixture
+    def __call__(self) -> Generator[Connection, None, None]:
+        connection = connect(":memory:")
+        yield connection
+        connection.close()
+
+
+def test_database(make_connection: MakeConnection) -> None:
+    connection = make_connection()
+    assert connection.execute("SELECT 1").fetchone() == (1,)
+```
+
+Each call returns its yielded value. Teardown runs when the fixture's scope ends (after the test by default),
+in reverse call order, even if the test fails.
+
+For async generators, use `async def __call__`, annotate it as `AsyncGenerator[T, None]`,
+and call the factory with `await`.
 
 ## Implementation details
 
